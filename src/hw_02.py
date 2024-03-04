@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.cluster.hierarchy import dendrogram
 from sklearn.cluster import AgglomerativeClustering
+from sklearn.manifold import TSNE
 
 def plot_dendrogram(model):
     # Create linkage matrix and then plot the dendrogram
@@ -41,11 +42,19 @@ confs = [
     {'n_clusters': 7, 'linkage': 'single'},
 ]
 
-cluster = AgglomerativeClustering(n_clusters=7, affinity='euclidean',
+cluster = AgglomerativeClustering(n_clusters=7, affinity='l2',
                                   compute_full_tree='auto',
-                                  linkage='ward',
+                                  linkage='complete',
                                   compute_distances=True)
 
 cluster.fit_predict(vecs)
 
 plot_dendrogram(cluster)
+
+X_embedded = TSNE(n_components=2, learning_rate='auto',
+                  init='random', perplexity=3).fit_transform(vecs)
+
+plt.figure()
+for i in range(7):
+    plt.plot(X_embedded[cluster.labels_ == i], 'o', label=f'Cluster {i}')
+plt.show()
