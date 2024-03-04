@@ -13,6 +13,7 @@ def _hamming_(mat):
     return _hamming
 
 data = np.loadtxt('../data/zoo/zoo.data', delimiter=',', dtype='object')
+data = data[:, :-1]
 
 _animals = list(data[:, 0])
 animals = {_name_: i for i, _name_ in enumerate(_animals)}
